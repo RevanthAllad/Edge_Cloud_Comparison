@@ -75,5 +75,3 @@ The project measures and compares:
 - Cost implications
 - Resource utilization
 
-## License
-MIT License 

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  signal_processor:
+    build: 
+      context: ./src/edge/signal_processor
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/edge/signal_processor:/app
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+
+  transmitter:
+    build:
+      context: ./src/edge/transmitter
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/edge/transmitter:/app
+    environment:
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+    depends_on:
+      - mosquitto
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    command: 'mosquitto -c /mosquitto/config/mosquitto.conf' 
